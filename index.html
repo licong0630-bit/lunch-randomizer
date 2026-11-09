@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f4f6fb">
+<title>午饭吃什么 · 随机抽取小应用</title>
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem('lunch.theme');
+    if (saved === 'light' || saved === 'dark') {
+      document.documentElement.dataset.theme = saved;
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.dataset.theme = 'dark';
+    }
+  } catch (e) {}
+})();
+</script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { min-height: 100%; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
+                 "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+    transition: background .3s ease, color .3s ease;
+  }
+
+  :root {
+    --bg: #f4f6fb;
+    --card: #ffffff;
+    --card-2: #f7f9fd;
+    --text: #171b24;
+    --sub: #6b7484;
+    --line: rgba(17, 24, 39, .08);
+    --brand: #ff6b35;
+    --brand-2: #ff9f1c;
+    --brand-soft: rgba(255, 107, 53, .10);
+    --brand-shadow: rgba(255, 107, 53, .30);
+    --shadow-1: 0 1px 2px rgba(16, 24, 40, .05);
+    --shadow-2: 0 16px 40px rgba(16, 24, 40, .10);
+    --glow-1: rgba(255, 107, 53, .18);
+    --glow-2: rgba(255, 166, 43, .16);
+    --glow-3: rgba(59, 130, 246, .10);
+    --input-bg: #ffffff;
+  }
+
+  html[data-theme="dark"] {
+    --bg: #0e1116;
+    --card: #171b22;
+    --card-2: #1c212a;
+    --text: #e8ecf3;
+    --sub: #98a2b3;
+    --line: rgba(255, 255, 255, .09);
+    --brand: #ff7a45;
+    --brand-2: #ffb547;
+    --brand-soft: rgba(255, 122, 69, .16);
+    --brand-shadow: rgba(255, 122, 69, .26);
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, .5);
+    --shadow-2: 0 18px 44px rgba(0, 0, 0, .45);
+    --glow-1: rgba(255, 122, 69, .16);
+    --glow-2: rgba(255, 181, 71, .10);
+    --glow-3: rgba(59, 130, 246, .14);
+    --input-bg: #12161c;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(900px 520px at 10% -10%, var(--glow-1), transparent 62%),
+      radial-gradient(820px 520px at 94% 2%, var(--glow-2), transparent 62%),
+      radial-gradient(760px 620px at 50% 112%, var(--glow-3), transparent 62%);
+  }
+
+  .wrap {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 22px 18px calc(44px + env(safe-area-inset-bottom));
+  }
+
+  /* ---------- 头部 ---------- */
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .logo {
+    width: 44px; height: 44px; flex: none;
+    border-radius: 14px;
+    display: grid; place-items: center;
+    font-size: 22px; line-height: 1;
+    background: linear-gradient(135deg, var(--brand), var(--brand-2));
+    box-shadow: 0 8px 20px var(--brand-shadow);
+  }
+  h1 { font-size: 19px; margin: 0; letter-spacing: .3px; }
+  .sub { font-size: 12px; color: var(--sub); margin: 3px 0 0; }
+  .icon-btn {
+    width: 40px; height: 40px; flex: none;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--text);
+    font-size: 17px; line-height: 1;
+    display: grid; place-items: center;
+    cursor: pointer;
+    transition: transform .16s ease, background .2s ease;
+    box-shadow: var(--shadow-1);
+  }
+  .icon-btn:active { transform: scale(.92); }
+
+  /* ---------- 分类筛选 ---------- */
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .chip {
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--sub);
+    font-size: 13px;
+    font-family: inherit;
+    line-height: 1;
+    cursor: pointer;
+    user-select: none;
+    transition: all .18s ease;
+    box-shadow: var(--shadow-1);
+  }
+  .chip:active { transform: scale(.95); }
+  .chip.on {
+    background: linear-gradient(135deg, var(--brand), var(--brand-2));
+    border-color: transparent;
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 6px 16px var(--brand-shadow);
+  }
+  .chip.small {
+    font-size: 12px;
+    padding: 7px 12px;
+    background: transparent;
+    box-shadow: none;
+    border-style: dashed;
+  }
+  .filters-hint {
+    font-size: 12px;
+    color: var(--sub);
+    margin: 10px 0 14px;
+  }
+
+  /* ---------- 抽取舞台 ---------- */
+  .stage { margin-top: 4px; }
+  .reel-wrap {
+    position: relative;
+    min-height: 200px;
+    padding: 26px 18px 22px;
+    border-radius: 24px;
+    border: 1px solid var(--line);
+    background: linear-gradient(180deg, var(--card-2), var(--card));
+    box-shadow: var(--shadow-2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    overflow: hidden;
+    transition: border-color .3s ease, box-shadow .3s ease;
+  }
+  .reel-wrap::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(120% 62% at 50% -18%, var(--brand-soft), transparent 72%);
+  }
+  .reel-wrap.done {
+    border-color: var(--brand);
+    box-shadow: 0 18px 46px var(--brand-shadow);
+  }
+  .tag {
+    position: relative;
+    z-index: 1;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--sub);
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: var(--brand-soft);
+    color: var(--brand);
+    font-weight: 600;
+  }
+  .reel-text {
+    position: relative;
+    z-index: 1;
+    font-size: clamp(30px, 10vw, 46px);
+    font-weight: 800;
+    line-height: 1.16;
+    letter-spacing: 1px;
+    text-align: center;
+    word-break: break-word;
+    padding: 0 6px;
+    transition: filter .2s ease, opacity .2s ease;
+  }
+  .reel-text[data-long="1"] { font-size: clamp(22px, 7.4vw, 34px); letter-spacing: 0; }
+  .reel-wrap.spinning .reel-text { filter: blur(.6px); opacity: .9; }
+  .reel-cat {
+    position: relative;
+    z-index: 1;
+    font-size: 13px;
+    color: var(--sub);
+    min-height: 18px;
+    letter-spacing: .5px;
+  }
+  @keyframes pop {
+    0%   { transform: scale(.84); opacity: .35; }
+    55%  { transform: scale(1.09); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .reel-text.pop { animation: pop .52s cubic-bezier(.2, .9, .3, 1.4); }
+
+  .spin-btn {
+    width: 100%;
+    margin-top: 14px;
+    height: 56px;
+    border: none;
+    border-radius: 18px;
+    font-family: inherit;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: #fff;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--brand), var(--brand-2));
+    box-shadow: 0 14px 30px var(--brand-shadow);
+    transition: transform .16s ease, filter .16s ease, box-shadow .16s ease;
+  }
+  .spin-btn:hover { filter: brightness(1.05); }
+  .spin-btn:active { transform: scale(.975); box-shadow: 0 8px 18px var(--brand-shadow); }
+  .spin-btn:disabled { opacity: .72; cursor: default; transform: none; }
+
+  .history {
+    margin-top: 14px;
+    min-height: 20px;
+    font-size: 12px;
+    color: var(--sub);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+  }
+  .history b { color: var(--text); font-weight: 600; }
+  .history .h-item {
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--card);
+    border: 1px solid var(--line);
+  }
+
+  /* ---------- 菜单管理 ---------- */
+  .manage {
+    margin-top: 26px;
+    padding: 18px;
+    border-radius: 22px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    box-shadow: var(--shadow-2);
+  }
+  .manage-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .manage-head h2 { font-size: 15px; margin: 0; letter-spacing: .3px; }
+  .count { font-size: 12px; color: var(--sub); }
+
+  .add-form {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .add-form input[type="text"] {
+    flex: 1 1 150px;
+    min-width: 0;
+    height: 44px;
+    padding: 0 14px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: var(--input-bg);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+    transition: border-color .2s ease, box-shadow .2s ease;
+  }
+  .add-form input[type="text"]:focus {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px var(--brand-soft);
+  }
+  .add-form select {
+    height: 44px;
+    padding: 0 10px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: var(--input-bg);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+  }
+  .add-btn {
+    height: 44px;
+    padding: 0 18px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--brand), var(--brand-2));
+    color: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 8px 18px var(--brand-shadow);
+    transition: transform .16s ease;
+  }
+  .add-btn:active { transform: scale(.95); }
+
+  .list { margin-top: 16px; display: flex; flex-direction: column; gap: 14px; }
+  .group-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--sub);
+    margin-bottom: 8px;
+    letter-spacing: .4px;
+  }
+  .group-head::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+  .items { display: flex; flex-wrap: wrap; gap: 7px; }
+  .item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 8px 6px 11px;
+    border-radius: 10px;
+    background: var(--card-2);
+    border: 1px solid var(--line);
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .item.mine {
+    border-color: var(--brand);
+    background: var(--brand-soft);
+  }
+  .item .del {
+    width: 20px; height: 20px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--sub);
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    display: grid; place-items: center;
+    transition: background .16s ease, color .16s ease;
+  }
+  .item .del:hover { background: rgba(255, 69, 58, .14); color: #ff453a; }
+
+  .manage-foot {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .link-btn {
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--sub);
+    font-family: inherit;
+    font-size: 12px;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .link-btn:hover { color: var(--brand); }
+  .foot-note { font-size: 11px; color: var(--sub); opacity: .8; }
+
+  /* ---------- 提示 ---------- */
+  #toast {
+    position: fixed;
+    left: 50%;
+    bottom: calc(28px + env(safe-area-inset-bottom));
+    transform: translate(-50%, 14px);
+    padding: 11px 18px;
+    border-radius: 999px;
+    background: rgba(23, 27, 36, .92);
+    color: #fff;
+    font-size: 13px;
+    white-space: nowrap;
+    max-width: 88vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s ease, transform .25s ease;
+    z-index: 9999;
+    backdrop-filter: blur(8px);
+  }
+  html[data-theme="dark"] #toast { background: rgba(238, 242, 250, .95); color: #12161c; }
+  #toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  #fx {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9998;
+  }
+
+  @media (max-width: 360px) {
+    .reel-text { font-size: 28px; }
+    .wrap { padding-left: 14px; padding-right: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="logo">🍜</div>
+      <div>
+        <h1>午饭吃什么</h1>
+        <p class="sub">选择困难症的终极解药</p>
+      </div>
+    </div>
+    <button class="icon-btn" id="themeBtn" type="button" title="切换深色模式" aria-label="切换深色模式">🌙</button>
+  </header>
+
+  <div class="filters" id="filters"></div>
+  <p class="filters-hint" id="filtersHint">已选全部品类，点击可只看某几类</p>
+
+  <section class="stage">
+    <div class="reel-wrap" id="reelWrap">
+      <div class="tag" id="tag">今天吃</div>
+      <div class="reel-text" id="reelText">准备好了吗？</div>
+      <div class="reel-cat" id="reelCat">点击下方按钮开始抽取</div>
+    </div>
+    <button class="spin-btn" id="spinBtn" type="button">开 始 抽 取</button>
+    <div class="history" id="history"></div>
+  </section>
+
+  <section class="manage">
+    <div class="manage-head">
+      <h2>我的菜单</h2>
+      <span class="count" id="poolCount"></span>
+    </div>
+
+    <form class="add-form" id="addForm" autocomplete="off">
+      <input type="text" id="nameInput" maxlength="20" placeholder="添加菜品，如：番茄牛腩面">
+      <select id="catSelect"></select>
+      <button type="submit" class="add-btn">添加</button>
+    </form>
+
+    <div class="list" id="list"></div>
+
+    <div class="manage-foot">
+      <button class="link-btn" id="restoreBtn" type="button">恢复默认菜品</button>
+      <span class="foot-note">自定义菜品保存在本机浏览器</span>
+    </div>
+  </section>
+</div>
+
+<canvas id="fx"></canvas>
+<div id="toast"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ================= 数据 ================= */
+  var DEFAULT_MENU = {
+    '中式快餐': ['黄焖鸡米饭', '沙县小吃', '老乡鸡套餐', '真功夫蒸饭', '麻辣烫', '关东煮', '韩式炸鸡饭', '木桶饭', '卤肉饭', '铁板炒饭'],
+    '面食': ['兰州牛肉拉面', '老北京炸酱面', '山西刀削面', '武汉热干面', '重庆小面', '四川担担面', '油泼面', '臊子面', '阳春面', '意式肉酱面'],
+    '米饭套餐': ['台式卤肉饭', '广式煲仔饭', '日式咖喱饭', '照烧鸡腿饭', '番茄牛腩饭', '梅菜扣肉饭', '潮汕猪脚饭', '香煎鸡排饭', '日式蛋包饭', '扬州炒饭'],
+    '汤粥': ['皮蛋瘦肉粥', '小米南瓜粥', '生滚鱼片粥', '潮汕砂锅粥', '酸辣汤', '罗宋汤', '北方疙瘩汤', '河南胡辣汤', '银耳莲子羹', '番茄蛋花汤'],
+    '轻食沙拉': ['鸡胸肉沙拉', '牛油果沙拉', '三文鱼沙拉', '藜麦能量碗', '鸡胸肉卷饼', '希腊酸奶碗', '全麦三明治', '夏威夷波奇饭', '羽衣甘蓝沙拉', '水煮菜套餐'],
+    '粉面': ['桂林米粉', '柳州螺蛳粉', '湖南米粉', '潮汕粿条', '云南过桥米线', '越南河粉', '陕西凉皮', '重庆酸辣粉', '猪脚粉', '广式肠粉'],
+    '小吃': ['煎饼果子', '包子配豆浆', '上海生煎', '无锡小笼包', '西安肉夹馍', '手抓饼', '麻辣香锅', '干炒河粉', '铁板豆腐', '东北烤冷面']
+  };
+  var CATS = Object.keys(DEFAULT_MENU);
+
+  var KEY_DATA = 'lunch.picker.v1';
+  var KEY_HIST = 'lunch.history.v1';
+  var KEY_THEME = 'lunch.theme';
+
+  var state = { custom: [], hidden: [] };
+  var selectedCats = new Set(CATS);
+  var history = [];
+  var spinning = false;
+  var lastResult = null;
+
+  /* ================= 工具 ================= */
+  function $(id) { return document.getElementById(id); }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
+    });
+  }
+  function key(cat, name) { return cat + '::' + name; }
+
+  var toastTimer = null;
+  function toast(msg) {
+    var el = $('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove('show'); }, 1900);
+  }
+
+  /* ================= 持久化 ================= */
+  function loadState() {
+    try {
+      var raw = localStorage.getItem(KEY_DATA);
+      if (raw) {
+        var o = JSON.parse(raw) || {};
+        if (Array.isArray(o.custom)) {
+          state.custom = o.custom.filter(function (x) {
+            return x && typeof x.name === 'string' && typeof x.cat === 'string' && CATS.indexOf(x.cat) > -1;
+          });
+        }
+        if (Array.isArray(o.hidden)) {
+          state.hidden = o.hidden.filter(function (x) { return typeof x === 'string'; });
+        }
+      }
+      var h = localStorage.getItem(KEY_HIST);
+      if (h) {
+        var arr = JSON.parse(h);
+        if (Array.isArray(arr)) history = arr.filter(function (x) { return typeof x === 'string'; }).slice(0, 5);
+      }
+    } catch (e) { /* 本地存储不可用时降级为内存态 */ }
+  }
+  function saveState() {
+    try { localStorage.setItem(KEY_DATA, JSON.stringify(state)); } catch (e) {}
+  }
+  function saveHistory() {
+    try { localStorage.setItem(KEY_HIST, JSON.stringify(history)); } catch (e) {}
+  }
+
+  /* ================= 菜品集合 ================= */
+  function itemsOf(cat) {
+    var out = [];
+    (DEFAULT_MENU[cat] || []).forEach(function (n) {
+      if (state.hidden.indexOf(key(cat, n)) === -1) out.push({ name: n, cat: cat, mine: false });
+    });
+    state.custom.forEach(function (c) {
+      if (c.cat === cat) out.push({ name: c.name, cat: cat, mine: true });
+    });
+    return out;
+  }
+  function allItems() {
+    var out = [];
+    CATS.forEach(function (c) { out = out.concat(itemsOf(c)); });
+    return out;
+  }
+  function currentPool() {
+    var cats = CATS.filter(function (c) { return selectedCats.has(c); });
+    var out = [];
+    cats.forEach(function (c) { out = out.concat(itemsOf(c)); });
+    return out;
+  }
+
+  /* ================= 渲染：品类筛选 ================= */
+  function renderFilters() {
+    var box = $('filters');
+    box.innerHTML = '';
+
+    CATS.forEach(function (cat) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'chip' + (selectedCats.has(cat) ? ' on' : '');
+      b.textContent = cat;
+      b.addEventListener('click', function () {
+        if (selectedCats.has(cat)) {
+          if (selectedCats.size === 1) { toast('至少保留一个品类'); return; }
+          selectedCats.delete(cat);
+        } else {
+          selectedCats.add(cat);
+        }
+        renderFilters();
+        updateCounts();
+      });
+      box.appendChild(b);
+    });
+
+    var allOn = selectedCats.size === CATS.length;
+    var t = document.createElement('button');
+    t.type = 'button';
+    t.className = 'chip small';
+    t.textContent = allOn ? '取消全选' : '全选';
+    t.addEventListener('click', function () {
+      if (allOn) { selectedCats = new Set([CATS[0]]); }
+      else { selectedCats = new Set(CATS); }
+      renderFilters();
+      updateCounts();
+    });
+    box.appendChild(t);
+
+    var hint = $('filtersHint');
+    if (selectedCats.size === CATS.length) {
+      hint.textContent = '已选全部品类，点击可只看某几类';
+    } else {
+      hint.textContent = '当前只在 ' + selectedCats.size + ' 个品类中抽取';
+    }
+  }
+
+  /* ================= 渲染：菜单列表 ================= */
+  function renderList() {
+    var box = $('list');
+    var html = '';
+    CATS.forEach(function (cat) {
+      var items = itemsOf(cat);
+      if (!items.length) return;
+      html += '<div class="group">';
+      html += '<div class="group-head"><span>' + esc(cat) + '</span><span>' + items.length + '</span></div>';
+      html += '<div class="items">';
+      items.forEach(function (it) {
+        html += '<span class="item' + (it.mine ? ' mine' : '') + '">' + esc(it.name) +
+                '<button class="del" type="button" title="删除" data-cat="' + esc(it.cat) +
+                '" data-name="' + esc(it.name) + '" data-mine="' + (it.mine ? '1' : '0') + '">×</button></span>';
+      });
+      html += '</div></div>';
+    });
+    if (!html) {
+      html = '<p class="foot-note">菜单是空的，先添加几道想吃的菜吧。</p>';
+    }
+    box.innerHTML = html;
+  }
+
+  function updateCounts() {
+    var n = currentPool().length;
+    $('poolCount').textContent = '共 ' + allItems().length + ' 道菜 · 当前可抽 ' + n + ' 道';
+  }
+
+  /* ================= 渲染：历史记录 ================= */
+  function renderHistory() {
+    var box = $('history');
+    if (!history.length) { box.innerHTML = ''; return; }
+    var h = '最近抽到：';
+    history.slice(0, 4).forEach(function (n) {
+      h += '<span class="h-item">' + esc(n) + '</span>';
+    });
+    box.innerHTML = h;
+  }
+
+  /* ================= 抽取动效 ================= */
+  function setReel(text, cat) {
+    var el = $('reelText');
+    el.textContent = text;
+    el.dataset.long = text.length > 8 ? '1' : '0';
+    $('reelCat').textContent = cat || '';
+  }
+
+  function spin() {
+    if (spinning) return;
+    var pool = currentPool();
+    if (!pool.length) {
+      toast('当前品类下没有菜品，先添加几道吧');
+      return;
+    }
+
+    spinning = true;
+    var btn = $('spinBtn');
+    var wrap = $('reelWrap');
+    var text = $('reelText');
+
+    btn.disabled = true;
+    btn.textContent = '抽 取 中…';
+    wrap.classList.remove('done');
+    wrap.classList.add('spinning');
+    text.classList.remove('pop');
+    $('tag').textContent = '正在抽取';
+    $('reelCat').textContent = '';
+
+    var start = performance.now();
+    var duration = 2000 + Math.random() * 400;
+    var last = 0;
+    var lastIdx = -1;
+
+    function step(now) {
+      var t = Math.min(1, (now - start) / duration);
+      var delay = 45 + 235 * Math.pow(t, 2.6); // 逐帧衰减的切换频率
+      if (now - last >= delay) {
+        last = now;
+        var i;
+        do { i = Math.floor(Math.random() * pool.length); }
+        while (pool.length > 1 && i === lastIdx);
+        lastIdx = i;
+        setReel(pool[i].name, pool[i].cat);
+      }
+      if (t < 1) {
+        requestAnimationFrame(step);
+      } else {
+        finish(pool);
+      }
+    }
+    requestAnimationFrame(step);
+  }
+
+  function finish(pool) {
+    var pick = pool[Math.floor(Math.random() * pool.length)];
+    lastResult = pick;
+
+    setReel(pick.name, pick.cat);
+    var wrap = $('reelWrap');
+    wrap.classList.remove('spinning');
+    wrap.classList.add('done');
+    $('tag').textContent = '就吃这个';
+
+    var text = $('reelText');
+    text.classList.remove('pop');
+    void text.offsetWidth;
+    text.classList.add('pop');
+
+    confetti();
+
+    var btn = $('spinBtn');
+    btn.disabled = false;
+    btn.textContent = '再 抽 一 次';
+    spinning = false;
+
+    history.unshift(pick.name);
+    history = history.slice(0, 5);
+    saveHistory();
+    renderHistory();
+    updateCounts();
+  }
+
+  /* ================= 撒花动效 ================= */
+  var fx = $('fx');
+  var ctx = fx.getContext('2d');
+  var parts = [];
+  var rafId = null;
+  var COLORS = ['#ff6b35', '#ffa62b', '#22b573', '#3b82f6', '#a855f7', '#ec4899', '#facc15'];
+
+  function resizeFx() {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w = window.innerWidth;
+    var h = window.innerHeight;
+    fx.width = Math.floor(w * dpr);
+    fx.height = Math.floor(h * dpr);
+    fx.style.width = w + 'px';
+    fx.style.height = h + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  window.addEventListener('resize', resizeFx);
+  resizeFx();
+
+  function confetti() {
+    var cx = window.innerWidth / 2;
+    var cy = window.innerHeight * 0.36;
+    for (var i = 0; i < 90; i++) {
+      var a = Math.random() * Math.PI * 2;
+      var sp = 3 + Math.random() * 7.5;
+      parts.push({
+        x: cx, y: cy,
+        vx: Math.cos(a) * sp,
+        vy: Math.sin(a) * sp - 3.2,
+        g: 0.16 + Math.random() * 0.1,
+        w: 4 + Math.random() * 6,
+        h: 6 + Math.random() * 8,
+        rot: Math.random() * 6.28,
+        vr: (Math.random() - 0.5) * 0.36,
+        c: COLORS[Math.floor(Math.random() * COLORS.length)],
+        life: 0,
+        max: 66 + Math.random() * 40
+      });
+    }
+    if (!rafId) rafId = requestAnimationFrame(loopFx);
+  }
+
+  function loopFx() {
+    var w = window.innerWidth;
+    var h = window.innerHeight;
+    ctx.clearRect(0, 0, w, h);
+    var alive = [];
+    for (var i = 0; i < parts.length; i++) {
+      var p = parts[i];
+      p.life++;
+      if (p.life >= p.max) continue;
+      p.vy += p.g;
+      p.vx *= 0.995;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.vr;
+      alive.push(p);
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, 1 - p.life / p.max);
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.c;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    }
+    parts = alive;
+    if (parts.length) {
+      rafId = requestAnimationFrame(loopFx);
+    } else {
+      rafId = null;
+      ctx.clearRect(0, 0, w, h);
+    }
+  }
+
+  /* ================= 主题切换 ================= */
+  function syncThemeBtn() {
+    var dark = document.documentElement.dataset.theme === 'dark';
+    var btn = $('themeBtn');
+    btn.textContent = dark ? '☀️' : '🌙';
+    btn.title = dark ? '切换浅色模式' : '切换深色模式';
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', dark ? '#0e1116' : '#f4f6fb');
+  }
+  function toggleTheme() {
+    var dark = document.documentElement.dataset.theme === 'dark';
+    var next = dark ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem(KEY_THEME, next); } catch (e) {}
+    syncThemeBtn();
+  }
+
+  /* ================= 事件绑定 ================= */
+  function bind() {
+    $('spinBtn').addEventListener('click', spin);
+    $('themeBtn').addEventListener('click', toggleTheme);
+
+    // 添加菜品
+    $('addForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var input = $('nameInput');
+      var cat = $('catSelect').value;
+      var name = (input.value || '').trim().replace(/\s+/g, ' ');
+
+      if (!name) { toast('先输入菜品名称'); input.focus(); return; }
+      if (name.length > 20) { toast('菜品名太长了'); return; }
+
+      var exists = itemsOf(cat).some(function (it) { return it.name === name; });
+      if (exists) { toast('「' + name + '」已经在菜单里了'); return; }
+
+      state.custom.push({ name: name, cat: cat });
+      saveState();
+      input.value = '';
+      renderList();
+      updateCounts();
+      toast('已添加到「' + cat + '」');
+      // 若该品类未被选中，自动选中，便于抽到新菜
+      if (!selectedCats.has(cat)) {
+        selectedCats.add(cat);
+        renderFilters();
+        updateCounts();
+      }
+    });
+
+    // 删除菜品（事件委托）
+    $('list').addEventListener('click', function (e) {
+      var btn = e.target.closest ? e.target.closest('.del') : null;
+      if (!btn) return;
+      var cat = btn.getAttribute('data-cat');
+      var name = btn.getAttribute('data-name');
+      var mine = btn.getAttribute('data-mine') === '1';
+
+      if (mine) {
+        state.custom = state.custom.filter(function (c) {
+          return !(c.cat === cat && c.name === name);
+        });
+      } else {
+        var k = key(cat, name);
+        if (state.hidden.indexOf(k) === -1) state.hidden.push(k);
+      }
+      saveState();
+      renderList();
+      updateCounts();
+      if (lastResult && lastResult.name === name && lastResult.cat === cat) {
+        lastResult = null;
+        $('tag').textContent = '今天吃';
+        setReel('再抽一次吧', '');
+        $('reelWrap').classList.remove('done');
+      }
+    });
+
+    // 恢复默认
+    $('restoreBtn').addEventListener('click', function () {
+      if (!state.hidden.length && !state.custom.length) {
+        toast('菜单本来就是默认状态');
+        return;
+      }
+      state.hidden = [];
+      saveState();
+      renderList();
+      updateCounts();
+      toast('已恢复内置菜品');
+    });
+
+    // 键盘快捷键：空格抽取
+    document.addEventListener('keydown', function (e) {
+      if (e.code === 'Space' && document.activeElement.tagName !== 'INPUT' &&
+          document.activeElement.tagName !== 'SELECT' && !e.repeat) {
+        e.preventDefault();
+        spin();
+      }
+    });
+  }
+
+  /* ================= 初始化 ================= */
+  function init() {
+    loadState();
+
+    var sel = $('catSelect');
+    sel.innerHTML = CATS.map(function (c) {
+      return '<option value="' + esc(c) + '">' + esc(c) + '</option>';
+    }).join('');
+
+    renderFilters();
+    renderList();
+    renderHistory();
+    updateCounts();
+    syncThemeBtn();
+    bind();
+
+    // 跟随系统主题变化（用户未手动指定时）
+    if (window.matchMedia) {
+      try {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (ev) {
+          var saved = null;
+          try { saved = localStorage.getItem(KEY_THEME); } catch (e) {}
+          if (!saved) {
+            document.documentElement.dataset.theme = ev.matches ? 'dark' : 'light';
+            syncThemeBtn();
+          }
+        });
+      } catch (e) {}
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+</body>
+</html>
