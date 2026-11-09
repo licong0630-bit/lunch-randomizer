@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#f4f6fb">
-<title>午饭吃什么 · 随机抽取小应用</title>
+<title>午饭吃什么 · 随机抽取</title>
 <script>
 (function () {
   try {
@@ -93,7 +93,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    margin-bottom: 18px;
+    margin-bottom: 20px;
   }
   .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
   .logo {
@@ -115,59 +115,16 @@
     font-size: 17px; line-height: 1;
     display: grid; place-items: center;
     cursor: pointer;
-    transition: transform .16s ease, background .2s ease;
+    transition: transform .16s ease;
     box-shadow: var(--shadow-1);
   }
   .icon-btn:active { transform: scale(.92); }
 
-  /* ---------- 分类筛选 ---------- */
-  .filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 6px;
-  }
-  .chip {
-    padding: 8px 14px;
-    border-radius: 999px;
-    border: 1px solid var(--line);
-    background: var(--card);
-    color: var(--sub);
-    font-size: 13px;
-    font-family: inherit;
-    line-height: 1;
-    cursor: pointer;
-    user-select: none;
-    transition: all .18s ease;
-    box-shadow: var(--shadow-1);
-  }
-  .chip:active { transform: scale(.95); }
-  .chip.on {
-    background: linear-gradient(135deg, var(--brand), var(--brand-2));
-    border-color: transparent;
-    color: #fff;
-    font-weight: 600;
-    box-shadow: 0 6px 16px var(--brand-shadow);
-  }
-  .chip.small {
-    font-size: 12px;
-    padding: 7px 12px;
-    background: transparent;
-    box-shadow: none;
-    border-style: dashed;
-  }
-  .filters-hint {
-    font-size: 12px;
-    color: var(--sub);
-    margin: 10px 0 14px;
-  }
-
   /* ---------- 抽取舞台 ---------- */
-  .stage { margin-top: 4px; }
   .reel-wrap {
     position: relative;
-    min-height: 200px;
-    padding: 26px 18px 22px;
+    min-height: 216px;
+    padding: 28px 18px 24px;
     border-radius: 24px;
     border: 1px solid var(--line);
     background: linear-gradient(180deg, var(--card-2), var(--card));
@@ -176,7 +133,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 12px;
     overflow: hidden;
     transition: border-color .3s ease, box-shadow .3s ease;
   }
@@ -196,17 +153,16 @@
     z-index: 1;
     font-size: 12px;
     letter-spacing: 2px;
-    color: var(--sub);
+    color: var(--brand);
     padding: 5px 12px;
     border-radius: 999px;
     background: var(--brand-soft);
-    color: var(--brand);
     font-weight: 600;
   }
   .reel-text {
     position: relative;
     z-index: 1;
-    font-size: clamp(30px, 10vw, 46px);
+    font-size: clamp(32px, 10.5vw, 50px);
     font-weight: 800;
     line-height: 1.16;
     letter-spacing: 1px;
@@ -263,7 +219,6 @@
     align-items: center;
     justify-content: center;
   }
-  .history b { color: var(--text); font-weight: 600; }
   .history .h-item {
     padding: 4px 10px;
     border-radius: 999px;
@@ -271,7 +226,7 @@
     border: 1px solid var(--line);
   }
 
-  /* ---------- 菜单管理 ---------- */
+  /* ---------- 选项管理 ---------- */
   .manage {
     margin-top: 26px;
     padding: 18px;
@@ -290,13 +245,9 @@
   .manage-head h2 { font-size: 15px; margin: 0; letter-spacing: .3px; }
   .count { font-size: 12px; color: var(--sub); }
 
-  .add-form {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
+  .add-form { display: flex; gap: 8px; }
   .add-form input[type="text"] {
-    flex: 1 1 150px;
+    flex: 1 1 auto;
     min-width: 0;
     height: 44px;
     padding: 0 14px;
@@ -313,21 +264,10 @@
     border-color: var(--brand);
     box-shadow: 0 0 0 3px var(--brand-soft);
   }
-  .add-form select {
-    height: 44px;
-    padding: 0 10px;
-    border-radius: 12px;
-    border: 1px solid var(--line);
-    background: var(--input-bg);
-    color: var(--text);
-    font-family: inherit;
-    font-size: 13px;
-    outline: none;
-    cursor: pointer;
-  }
   .add-btn {
     height: 44px;
-    padding: 0 18px;
+    padding: 0 20px;
+    flex: none;
     border: none;
     border-radius: 12px;
     background: linear-gradient(135deg, var(--brand), var(--brand-2));
@@ -341,32 +281,21 @@
   }
   .add-btn:active { transform: scale(.95); }
 
-  .list { margin-top: 16px; display: flex; flex-direction: column; gap: 14px; }
-  .group-head {
+  .items {
+    margin-top: 16px;
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
     gap: 8px;
-    font-size: 12px;
-    color: var(--sub);
-    margin-bottom: 8px;
-    letter-spacing: .4px;
   }
-  .group-head::after {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background: var(--line);
-  }
-  .items { display: flex; flex-wrap: wrap; gap: 7px; }
   .item {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    padding: 6px 8px 6px 11px;
-    border-radius: 10px;
+    padding: 8px 8px 8px 13px;
+    border-radius: 12px;
     background: var(--card-2);
     border: 1px solid var(--line);
-    font-size: 13px;
+    font-size: 14px;
     color: var(--text);
     line-height: 1.2;
   }
@@ -375,18 +304,25 @@
     background: var(--brand-soft);
   }
   .item .del {
-    width: 20px; height: 20px;
+    width: 22px; height: 22px;
     border: none;
     border-radius: 50%;
     background: transparent;
     color: var(--sub);
-    font-size: 14px;
+    font-size: 15px;
     line-height: 1;
+    font-family: inherit;
     cursor: pointer;
     display: grid; place-items: center;
     transition: background .16s ease, color .16s ease;
   }
   .item .del:hover { background: rgba(255, 69, 58, .14); color: #ff453a; }
+
+  .empty-tip {
+    margin: 16px 0 0;
+    font-size: 12px;
+    color: var(--sub);
+  }
 
   .manage-foot {
     margin-top: 16px;
@@ -465,9 +401,6 @@
     <button class="icon-btn" id="themeBtn" type="button" title="切换深色模式" aria-label="切换深色模式">🌙</button>
   </header>
 
-  <div class="filters" id="filters"></div>
-  <p class="filters-hint" id="filtersHint">已选全部品类，点击可只看某几类</p>
-
   <section class="stage">
     <div class="reel-wrap" id="reelWrap">
       <div class="tag" id="tag">今天吃</div>
@@ -480,21 +413,20 @@
 
   <section class="manage">
     <div class="manage-head">
-      <h2>我的菜单</h2>
+      <h2>我的选项</h2>
       <span class="count" id="poolCount"></span>
     </div>
 
     <form class="add-form" id="addForm" autocomplete="off">
-      <input type="text" id="nameInput" maxlength="20" placeholder="添加菜品，如：番茄牛腩面">
-      <select id="catSelect"></select>
+      <input type="text" id="nameInput" maxlength="20" placeholder="添加一个选项，如：云南米线">
       <button type="submit" class="add-btn">添加</button>
     </form>
 
-    <div class="list" id="list"></div>
+    <div class="items" id="items"></div>
 
     <div class="manage-foot">
-      <button class="link-btn" id="restoreBtn" type="button">恢复默认菜品</button>
-      <span class="foot-note">自定义菜品保存在本机浏览器</span>
+      <button class="link-btn" id="restoreBtn" type="button">恢复默认 5 个选项</button>
+      <span class="foot-note">自定义选项保存在本机浏览器</span>
     </div>
   </section>
 </div>
@@ -507,26 +439,17 @@
   'use strict';
 
   /* ================= 数据 ================= */
-  var DEFAULT_MENU = {
-    '中式快餐': ['黄焖鸡米饭', '沙县小吃', '老乡鸡套餐', '真功夫蒸饭', '麻辣烫', '关东煮', '韩式炸鸡饭', '木桶饭', '卤肉饭', '铁板炒饭'],
-    '面食': ['兰州牛肉拉面', '老北京炸酱面', '山西刀削面', '武汉热干面', '重庆小面', '四川担担面', '油泼面', '臊子面', '阳春面', '意式肉酱面'],
-    '米饭套餐': ['台式卤肉饭', '广式煲仔饭', '日式咖喱饭', '照烧鸡腿饭', '番茄牛腩饭', '梅菜扣肉饭', '潮汕猪脚饭', '香煎鸡排饭', '日式蛋包饭', '扬州炒饭'],
-    '汤粥': ['皮蛋瘦肉粥', '小米南瓜粥', '生滚鱼片粥', '潮汕砂锅粥', '酸辣汤', '罗宋汤', '北方疙瘩汤', '河南胡辣汤', '银耳莲子羹', '番茄蛋花汤'],
-    '轻食沙拉': ['鸡胸肉沙拉', '牛油果沙拉', '三文鱼沙拉', '藜麦能量碗', '鸡胸肉卷饼', '希腊酸奶碗', '全麦三明治', '夏威夷波奇饭', '羽衣甘蓝沙拉', '水煮菜套餐'],
-    '粉面': ['桂林米粉', '柳州螺蛳粉', '湖南米粉', '潮汕粿条', '云南过桥米线', '越南河粉', '陕西凉皮', '重庆酸辣粉', '猪脚粉', '广式肠粉'],
-    '小吃': ['煎饼果子', '包子配豆浆', '上海生煎', '无锡小笼包', '西安肉夹馍', '手抓饼', '麻辣香锅', '干炒河粉', '铁板豆腐', '东北烤冷面']
-  };
-  var CATS = Object.keys(DEFAULT_MENU);
+  var DEFAULT_ITEMS = ['鱼头', '烧鹅', '锅气', '武夷山土菜', '自由活动'];
 
-  var KEY_DATA = 'lunch.picker.v1';
+  var KEY_DATA = 'lunch.options.v2';
+  var KEY_LEGACY = 'lunch.picker.v1';
   var KEY_HIST = 'lunch.history.v1';
   var KEY_THEME = 'lunch.theme';
 
+  // state.custom: 自定义选项名数组；state.hidden: 被隐藏的默认选项名数组
   var state = { custom: [], hidden: [] };
-  var selectedCats = new Set(CATS);
   var history = [];
   var spinning = false;
-  var lastResult = null;
 
   /* ================= 工具 ================= */
   function $(id) { return document.getElementById(id); }
@@ -535,7 +458,18 @@
       return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
     });
   }
-  function key(cat, name) { return cat + '::' + name; }
+  function dedupe(arr) {
+    var seen = Object.create(null);
+    var out = [];
+    arr.forEach(function (v) {
+      if (typeof v !== 'string') return;
+      var k = v.trim();
+      if (!k || seen[k]) return;
+      seen[k] = 1;
+      out.push(k);
+    });
+    return out;
+  }
 
   var toastTimer = null;
   function toast(msg) {
@@ -546,131 +480,100 @@
     toastTimer = setTimeout(function () { el.classList.remove('show'); }, 1900);
   }
 
-  /* ================= 持久化 ================= */
+  /* ================= 持久化 + 旧数据迁移 ================= */
+  function normalizeName(v) {
+    // 兼容旧结构 {name: 'xxx', cat: 'xxx'} 或纯字符串
+    if (typeof v === 'string') return v.trim();
+    if (v && typeof v === 'object' && typeof v.name === 'string') return v.name.trim();
+    return '';
+  }
+
   function loadState() {
     try {
       var raw = localStorage.getItem(KEY_DATA);
       if (raw) {
         var o = JSON.parse(raw) || {};
-        if (Array.isArray(o.custom)) {
-          state.custom = o.custom.filter(function (x) {
-            return x && typeof x.name === 'string' && typeof x.cat === 'string' && CATS.indexOf(x.cat) > -1;
-          });
-        }
-        if (Array.isArray(o.hidden)) {
-          state.hidden = o.hidden.filter(function (x) { return typeof x === 'string'; });
-        }
+        if (Array.isArray(o.custom)) state.custom = dedupe(o.custom.map(normalizeName));
+        if (Array.isArray(o.hidden)) state.hidden = dedupe(o.hidden.map(normalizeName));
+        return;
       }
-      var h = localStorage.getItem(KEY_HIST);
-      if (h) {
-        var arr = JSON.parse(h);
-        if (Array.isArray(arr)) history = arr.filter(function (x) { return typeof x === 'string'; }).slice(0, 5);
-      }
+      migrateLegacy();
     } catch (e) { /* 本地存储不可用时降级为内存态 */ }
   }
+
+  function migrateLegacy() {
+    try {
+      var raw = localStorage.getItem(KEY_LEGACY);
+      if (!raw) return;
+      var o = JSON.parse(raw) || {};
+      var legacyCustom = [];
+      (o.custom || []).forEach(function (x) { legacyCustom.push(normalizeName(x)); });
+      var legacyHidden = [];
+      (o.hidden || []).forEach(function (x) {
+        if (typeof x !== 'string') return;
+        var parts = x.split('::');
+        legacyHidden.push(parts[parts.length - 1]);
+      });
+      state.custom = dedupe(legacyCustom);
+      // 旧的默认菜品名已不存在于新选项表，直接丢弃，避免脏数据
+      state.hidden = dedupe(legacyHidden).filter(function (n) {
+        return DEFAULT_ITEMS.indexOf(n) > -1;
+      });
+      saveState();
+      try { localStorage.removeItem(KEY_LEGACY); } catch (e2) {}
+    } catch (e) { state.custom = []; state.hidden = []; }
+  }
+
   function saveState() {
     try { localStorage.setItem(KEY_DATA, JSON.stringify(state)); } catch (e) {}
   }
   function saveHistory() {
     try { localStorage.setItem(KEY_HIST, JSON.stringify(history)); } catch (e) {}
   }
+  function loadHistory() {
+    try {
+      var raw = localStorage.getItem(KEY_HIST);
+      if (!raw) return;
+      var arr = JSON.parse(raw);
+      if (Array.isArray(arr)) history = dedupe(arr.map(normalizeName)).slice(0, 5);
+    } catch (e) {}
+  }
 
-  /* ================= 菜品集合 ================= */
-  function itemsOf(cat) {
+  /* ================= 选项集合（单一扁平列表） ================= */
+  function allOptions() {
     var out = [];
-    (DEFAULT_MENU[cat] || []).forEach(function (n) {
-      if (state.hidden.indexOf(key(cat, n)) === -1) out.push({ name: n, cat: cat, mine: false });
+    DEFAULT_ITEMS.forEach(function (n) {
+      if (state.hidden.indexOf(n) === -1) out.push({ name: n, mine: false });
     });
-    state.custom.forEach(function (c) {
-      if (c.cat === cat) out.push({ name: c.name, cat: cat, mine: true });
+    state.custom.forEach(function (n) {
+      if (!DEFAULT_ITEMS.some(function (d) { return d === n; }) || state.hidden.indexOf(n) === -1) {
+        if (!out.some(function (o) { return o.name === n; })) out.push({ name: n, mine: true });
+      }
     });
     return out;
   }
-  function allItems() {
-    var out = [];
-    CATS.forEach(function (c) { out = out.concat(itemsOf(c)); });
-    return out;
-  }
-  function currentPool() {
-    var cats = CATS.filter(function (c) { return selectedCats.has(c); });
-    var out = [];
-    cats.forEach(function (c) { out = out.concat(itemsOf(c)); });
-    return out;
-  }
 
-  /* ================= 渲染：品类筛选 ================= */
-  function renderFilters() {
-    var box = $('filters');
-    box.innerHTML = '';
-
-    CATS.forEach(function (cat) {
-      var b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'chip' + (selectedCats.has(cat) ? ' on' : '');
-      b.textContent = cat;
-      b.addEventListener('click', function () {
-        if (selectedCats.has(cat)) {
-          if (selectedCats.size === 1) { toast('至少保留一个品类'); return; }
-          selectedCats.delete(cat);
-        } else {
-          selectedCats.add(cat);
-        }
-        renderFilters();
-        updateCounts();
-      });
-      box.appendChild(b);
-    });
-
-    var allOn = selectedCats.size === CATS.length;
-    var t = document.createElement('button');
-    t.type = 'button';
-    t.className = 'chip small';
-    t.textContent = allOn ? '取消全选' : '全选';
-    t.addEventListener('click', function () {
-      if (allOn) { selectedCats = new Set([CATS[0]]); }
-      else { selectedCats = new Set(CATS); }
-      renderFilters();
-      updateCounts();
-    });
-    box.appendChild(t);
-
-    var hint = $('filtersHint');
-    if (selectedCats.size === CATS.length) {
-      hint.textContent = '已选全部品类，点击可只看某几类';
-    } else {
-      hint.textContent = '当前只在 ' + selectedCats.size + ' 个品类中抽取';
+  /* ================= 渲染 ================= */
+  function renderItems() {
+    var box = $('items');
+    var list = allOptions();
+    if (!list.length) {
+      box.innerHTML = '<p class="empty-tip">选项空了，先添加几个想吃的吧。</p>';
+      return;
     }
-  }
-
-  /* ================= 渲染：菜单列表 ================= */
-  function renderList() {
-    var box = $('list');
     var html = '';
-    CATS.forEach(function (cat) {
-      var items = itemsOf(cat);
-      if (!items.length) return;
-      html += '<div class="group">';
-      html += '<div class="group-head"><span>' + esc(cat) + '</span><span>' + items.length + '</span></div>';
-      html += '<div class="items">';
-      items.forEach(function (it) {
-        html += '<span class="item' + (it.mine ? ' mine' : '') + '">' + esc(it.name) +
-                '<button class="del" type="button" title="删除" data-cat="' + esc(it.cat) +
-                '" data-name="' + esc(it.name) + '" data-mine="' + (it.mine ? '1' : '0') + '">×</button></span>';
-      });
-      html += '</div></div>';
+    list.forEach(function (it) {
+      html += '<span class="item' + (it.mine ? ' mine' : '') + '">' + esc(it.name) +
+              '<button class="del" type="button" title="删除" data-name="' + esc(it.name) +
+              '" data-mine="' + (it.mine ? '1' : '0') + '">×</button></span>';
     });
-    if (!html) {
-      html = '<p class="foot-note">菜单是空的，先添加几道想吃的菜吧。</p>';
-    }
     box.innerHTML = html;
   }
 
   function updateCounts() {
-    var n = currentPool().length;
-    $('poolCount').textContent = '共 ' + allItems().length + ' 道菜 · 当前可抽 ' + n + ' 道';
+    $('poolCount').textContent = '共 ' + allOptions().length + ' 个选项';
   }
 
-  /* ================= 渲染：历史记录 ================= */
   function renderHistory() {
     var box = $('history');
     if (!history.length) { box.innerHTML = ''; return; }
@@ -681,19 +584,18 @@
     box.innerHTML = h;
   }
 
-  /* ================= 抽取动效 ================= */
-  function setReel(text, cat) {
+  function setReel(text) {
     var el = $('reelText');
     el.textContent = text;
     el.dataset.long = text.length > 8 ? '1' : '0';
-    $('reelCat').textContent = cat || '';
   }
 
+  /* ================= 抽取动效 ================= */
   function spin() {
     if (spinning) return;
-    var pool = currentPool();
+    var pool = allOptions();
     if (!pool.length) {
-      toast('当前品类下没有菜品，先添加几道吧');
+      toast('先添加至少一个选项');
       return;
     }
 
@@ -724,7 +626,7 @@
         do { i = Math.floor(Math.random() * pool.length); }
         while (pool.length > 1 && i === lastIdx);
         lastIdx = i;
-        setReel(pool[i].name, pool[i].cat);
+        setReel(pool[i].name);
       }
       if (t < 1) {
         requestAnimationFrame(step);
@@ -737,13 +639,13 @@
 
   function finish(pool) {
     var pick = pool[Math.floor(Math.random() * pool.length)];
-    lastResult = pick;
 
-    setReel(pick.name, pick.cat);
+    setReel(pick.name);
     var wrap = $('reelWrap');
     wrap.classList.remove('spinning');
     wrap.classList.add('done');
     $('tag').textContent = '就吃这个';
+    $('reelCat').textContent = '从 ' + pool.length + ' 个选项里抽的';
 
     var text = $('reelText');
     text.classList.remove('pop');
@@ -758,10 +660,9 @@
     spinning = false;
 
     history.unshift(pick.name);
-    history = history.slice(0, 5);
+    history = dedupe(history).slice(0, 5);
     saveHistory();
     renderHistory();
-    updateCounts();
   }
 
   /* ================= 撒花动效 ================= */
@@ -839,7 +740,7 @@
     }
   }
 
-  /* ================= 主题切换 ================= */
+  /* ================= 主题 ================= */
   function syncThemeBtn() {
     var dark = document.documentElement.dataset.theme === 'dark';
     var btn = $('themeBtn');
@@ -856,82 +757,77 @@
     syncThemeBtn();
   }
 
-  /* ================= 事件绑定 ================= */
+  /* ================= 事件 ================= */
   function bind() {
     $('spinBtn').addEventListener('click', spin);
     $('themeBtn').addEventListener('click', toggleTheme);
 
-    // 添加菜品
+    // 添加选项
     $('addForm').addEventListener('submit', function (e) {
       e.preventDefault();
       var input = $('nameInput');
-      var cat = $('catSelect').value;
       var name = (input.value || '').trim().replace(/\s+/g, ' ');
+      if (!name) { toast('先输入选项名称'); input.focus(); return; }
+      if (name.length > 20) { toast('名称太长了'); return; }
 
-      if (!name) { toast('先输入菜品名称'); input.focus(); return; }
-      if (name.length > 20) { toast('菜品名太长了'); return; }
+      var exists = allOptions().some(function (it) { return it.name === name; });
+      if (exists) { toast('「' + name + '」已经存在了'); return; }
 
-      var exists = itemsOf(cat).some(function (it) { return it.name === name; });
-      if (exists) { toast('「' + name + '」已经在菜单里了'); return; }
+      // 若该名称曾被隐藏，先解除隐藏
+      var hi = state.hidden.indexOf(name);
+      if (hi > -1) state.hidden.splice(hi, 1);
+      else state.custom.push(name);
 
-      state.custom.push({ name: name, cat: cat });
       saveState();
       input.value = '';
-      renderList();
+      renderItems();
       updateCounts();
-      toast('已添加到「' + cat + '」');
-      // 若该品类未被选中，自动选中，便于抽到新菜
-      if (!selectedCats.has(cat)) {
-        selectedCats.add(cat);
-        renderFilters();
-        updateCounts();
-      }
+      toast('已添加「' + name + '」');
     });
 
-    // 删除菜品（事件委托）
-    $('list').addEventListener('click', function (e) {
+    // 删除选项（事件委托）
+    $('items').addEventListener('click', function (e) {
       var btn = e.target.closest ? e.target.closest('.del') : null;
       if (!btn) return;
-      var cat = btn.getAttribute('data-cat');
       var name = btn.getAttribute('data-name');
       var mine = btn.getAttribute('data-mine') === '1';
 
       if (mine) {
-        state.custom = state.custom.filter(function (c) {
-          return !(c.cat === cat && c.name === name);
-        });
-      } else {
-        var k = key(cat, name);
-        if (state.hidden.indexOf(k) === -1) state.hidden.push(k);
+        state.custom = state.custom.filter(function (n) { return n !== name; });
+      } else if (state.hidden.indexOf(name) === -1) {
+        state.hidden.push(name);
       }
       saveState();
-      renderList();
+      renderItems();
       updateCounts();
-      if (lastResult && lastResult.name === name && lastResult.cat === cat) {
-        lastResult = null;
+
+      // 结果区同步
+      if ($('reelText').textContent === name) {
         $('tag').textContent = '今天吃';
-        setReel('再抽一次吧', '');
+        setReel('再抽一次吧');
+        $('reelCat').textContent = '';
         $('reelWrap').classList.remove('done');
+        $('spinBtn').textContent = '开 始 抽 取';
       }
     });
 
     // 恢复默认
     $('restoreBtn').addEventListener('click', function () {
       if (!state.hidden.length && !state.custom.length) {
-        toast('菜单本来就是默认状态');
+        toast('当前已经是默认选项');
         return;
       }
       state.hidden = [];
       saveState();
-      renderList();
+      renderItems();
       updateCounts();
-      toast('已恢复内置菜品');
+      toast('已恢复默认 5 个选项');
     });
 
-    // 键盘快捷键：空格抽取
+    // 空格快捷抽取
     document.addEventListener('keydown', function (e) {
-      if (e.code === 'Space' && document.activeElement.tagName !== 'INPUT' &&
-          document.activeElement.tagName !== 'SELECT' && !e.repeat) {
+      var tag = (document.activeElement && document.activeElement.tagName) || '';
+      if (e.code === 'Space' && tag !== 'INPUT' && tag !== 'SELECT' && tag !== 'TEXTAREA' && !e.repeat) {
         e.preventDefault();
         spin();
       }
@@ -941,20 +837,13 @@
   /* ================= 初始化 ================= */
   function init() {
     loadState();
-
-    var sel = $('catSelect');
-    sel.innerHTML = CATS.map(function (c) {
-      return '<option value="' + esc(c) + '">' + esc(c) + '</option>';
-    }).join('');
-
-    renderFilters();
-    renderList();
+    loadHistory();
+    renderItems();
     renderHistory();
     updateCounts();
     syncThemeBtn();
     bind();
 
-    // 跟随系统主题变化（用户未手动指定时）
     if (window.matchMedia) {
       try {
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (ev) {
